@@ -20,6 +20,8 @@ namespace Panels
         private string _terrainWidth;
         private string _terrainHeight;
 
+        private float _terrainOffset = 0.75f;
+
         public void InstantiateTerrain()
         {
             int width;
@@ -34,14 +36,14 @@ namespace Panels
 
             for (var i = 0; i < width; i++)
             {
-                float widthOffset = i * 0.75f;
+                float widthOffset = i * _terrainOffset;
                 Vector3 horizontalPosition = transform.position + m_Right * widthOffset;
                 GameObject horizontalTile = Instantiate(_terrainPrefab, horizontalPosition, transform.rotation);
                 horizontalTile.transform.parent = m_TerrainContainer.transform;
 
                 for (var j = 1; j < height; j++)
                 {
-                    float heightOffset = j * 0.75f;
+                    float heightOffset = j * _terrainOffset;
                     Vector3 verticalPosition = transform.position + m_Right * widthOffset + m_Up * heightOffset;
                     GameObject verticalTile = Instantiate(_terrainPrefab, verticalPosition, transform.rotation);
                     verticalTile.transform.parent = m_TerrainContainer.transform;
@@ -83,8 +85,8 @@ namespace Panels
         {
             m_TerrainContainer.AddComponent<BoxCollider2D>();
             m_TerraiinContainerCollider = m_TerrainContainer.GetComponent<BoxCollider2D>();
-            m_TerraiinContainerCollider.size = new Vector2(width * 0.75f, height * 0.75f);
-            m_TerraiinContainerCollider.offset = new Vector2(0.37f * (width - 1), 0.37f * (height - 1));
+            m_TerraiinContainerCollider.size = new Vector2(width * _terrainOffset, height * _terrainOffset);
+            m_TerraiinContainerCollider.offset = new Vector2((_terrainOffset/2) * (width - 1), (_terrainOffset/2) * (height - 1));
             m_TerraiinContainerCollider.isTrigger = true;
 
             m_TerrainContainer.AddComponent<DragDropManager>();
