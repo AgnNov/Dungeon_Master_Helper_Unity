@@ -1,0 +1,8 @@
+CREDIT:
+
+SPRITES by PONETI:
+https://assetstore.unity.com/packages/2d/gui/icons/gui-parts-159068
+
+
+FONTS by Omnibus-Type:
+https://github.com/Omnibus-Type/Texturina/tree/master
