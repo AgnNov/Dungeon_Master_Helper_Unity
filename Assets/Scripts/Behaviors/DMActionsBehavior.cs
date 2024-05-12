@@ -1,3 +1,4 @@
+using Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,7 +48,7 @@ namespace Panels
             _addCreatureButton.onClick.AddListener(() => _panelManager.OpenPanel(_creaturePanel));
             _rollTheDiceButton.onClick.AddListener(() => _panelManager.OpenPanel(_rollboxPanel));
             _clearDrawingsButton.onClick.AddListener(() => ClearDrawings());
-            _drawButton.onClick.AddListener(() => _drawingManager.ChangeActiveness());
+            _drawButton.onClick.AddListener(() => _drawingManager.ChangeActivenessStatus());
             _drawButton.onClick.AddListener(() => ChangeDrawBtnText());
         }
 

@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
-namespace Panels
+namespace Managers
 {
     public class PanelManager : MonoBehaviour
     {
@@ -21,5 +22,16 @@ namespace Panels
             isPanelOpened = false;
         }
 
+        public void ManageButtonInteractibility(bool condition, Button button)
+        {
+            if (condition)
+            {
+                button.interactable = true;
+            }
+            else
+            {
+                button.interactable = false;
+            }
+        }
     }
 }

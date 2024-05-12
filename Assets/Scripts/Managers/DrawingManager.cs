@@ -1,43 +1,40 @@
-using Panels;
+using Managers;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
-using RenderMode = UnityEngine.RenderMode;
 
 public class DrawingManager : MonoBehaviour
 {
     private GameObject _drawing;
     private LineRenderer _line;
-    private Canvas _drawingCanvas;
     private Vector3 _previousPosition;
 
+
     [SerializeField]
-    private float minDistance = 0.1f;
-    [SerializeField]
-    private float lineWidth = 0.1f;
-    [SerializeField]
-    private Material lineMaterial;
+    private Material _lineMaterial;
     [SerializeField]
     private GameObject _drawingsContainer;
     [SerializeField]
-    private GameObject _panelManager;
+    private GameObject _panelManagerGO;
 
-    private PanelManager _panelBehavior;
+    private PanelManager _panelManger;
 
+    private float minDistance = 0.1f;
+    private float _lineWidth = 0.1f;
 
     public bool isActive = false;
 
 
     void Start()
     {
-        _panelBehavior = _panelManager.GetComponent<PanelManager>();
+        _panelManger = _panelManagerGO.GetComponent<PanelManager>();
     }
 
     void Update()
     {
-        if (isActive && !_panelBehavior.isPanelOpened)
+        if (isActive && !_panelManger.isPanelOpened)
         {
 
             if (Input.GetMouseButtonDown(0))
@@ -47,8 +44,8 @@ public class DrawingManager : MonoBehaviour
                 _line = _drawing.AddComponent<LineRenderer>();
                 _previousPosition = _drawing.transform.position;
 
-                _line.startWidth = lineWidth;
-                _line.material = lineMaterial;
+                _line.startWidth = _lineWidth;
+                _line.material = _lineMaterial;
                 _line.positionCount = 1;
 
             }
@@ -79,7 +76,7 @@ public class DrawingManager : MonoBehaviour
         }
     }
 
-    public void ChangeActiveness()
+    public void ChangeActivenessStatus()
     {
         isActive = !isActive;
     }

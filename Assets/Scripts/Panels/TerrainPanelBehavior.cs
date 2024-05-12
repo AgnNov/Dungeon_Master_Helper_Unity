@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Managers;
 using Spawners;
 using TMPro;
 using Unity.VisualScripting;
@@ -23,49 +24,41 @@ namespace Panels
         private TMP_InputField _widthInputValue;
 
         [SerializeField]
-        private GameObject _panelManager;
+        private GameObject _panelManagerGO;
         [SerializeField]
-        private GameObject _inputsManager;
+        private GameObject _inputsManagerGO;
         [SerializeField]
-        private GameObject _spawnManager;
+        private GameObject _spawnManagerGO;
 
-        private PanelManager _panelBehavior;
-        private InputsManager _inputsBehavior;
-        private TerrainSpawner _terrainBehavior;
+        private PanelManager _panelManager;
+        private InputsManager _inputsManager;
+        private TerrainSpawner _terrainSpawner;
 
         private void Start()
         {
-            _panelBehavior = _panelManager.GetComponent<PanelManager>();
-            _inputsBehavior = _inputsManager.GetComponent<InputsManager>();
-            _terrainBehavior = _spawnManager.GetComponent<TerrainSpawner>();
+            _panelManager = _panelManagerGO.GetComponent<PanelManager>();
+            _inputsManager = _inputsManagerGO.GetComponent<InputsManager>();
+            _terrainSpawner = _spawnManagerGO.GetComponent<TerrainSpawner>();
 
 
-            _confirmButton.onClick.AddListener(() => _terrainBehavior.InstantiateTerrain());
-            _confirmButton.onClick.AddListener(() => _inputsBehavior.ResetInputText(_heightInputValue));
-            _confirmButton.onClick.AddListener(() => _inputsBehavior.ResetInputText(_widthInputValue));
-            _confirmButton.onClick.AddListener(() => _panelBehavior.ClosePanel(this.gameObject));
+            _confirmButton.onClick.AddListener(() => _terrainSpawner.InstantiateTerrain());
+            _confirmButton.onClick.AddListener(() => _inputsManager.ResetInputText(_heightInputValue));
+            _confirmButton.onClick.AddListener(() => _inputsManager.ResetInputText(_widthInputValue));
+            _confirmButton.onClick.AddListener(() => _panelManager.ClosePanel(gameObject));
 
-            _cancelButton.onClick.AddListener(() => _inputsBehavior.ResetInputText(_heightInputValue));
-            _cancelButton.onClick.AddListener(() => _inputsBehavior.ResetInputText(_widthInputValue));
-            _cancelButton.onClick.AddListener(() => _panelBehavior.ClosePanel(this.gameObject));
+            _cancelButton.onClick.AddListener(() => _inputsManager.ResetInputText(_heightInputValue));
+            _cancelButton.onClick.AddListener(() => _inputsManager.ResetInputText(_widthInputValue));
+            _cancelButton.onClick.AddListener(() => _panelManager.ClosePanel(gameObject));
 
         }
 
         private void Update()
         {
-            ManageConfirmButton();
+            bool interactibilityCondition = _heightInputValue.text != "" && _widthInputValue.text != "";
+            _panelManager.ManageButtonInteractibility(interactibilityCondition,
+                                                      _confirmButton);
+
         }
 
-        private void ManageConfirmButton()
-        {
-            if (_heightInputValue.text != "" && _widthInputValue.text != "")
-            {
-                _confirmButton.interactable = true;
-            }
-            else
-            {
-                _confirmButton.interactable = false;
-            }
-        }
     }
 }

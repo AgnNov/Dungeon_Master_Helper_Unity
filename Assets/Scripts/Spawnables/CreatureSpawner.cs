@@ -30,7 +30,6 @@ namespace Spawners
             creature.transform.parent = _creaturesContainer.transform;
             creature.AddComponent<CircleCollider2D>().isTrigger = true;
             creature.AddComponent<DragablesBehavior>();
-            //creature.GetComponentInChildren<Canvas>().renderMode = RenderMode.WorldSpace;
             creature.GetComponentInChildren<TMP_Text>().text = _creaturePanelBehavior.creatureName;
 
             switch (creatureType)
