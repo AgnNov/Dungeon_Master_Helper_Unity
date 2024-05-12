@@ -5,12 +5,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Panels
+namespace Spawners
 {
     public class TerrainSpawner : MonoBehaviour
     {
         [SerializeField]
         private GameObject _terrainPrefab;
+        [SerializeField]
+        private GameObject _terrainContainer;
 
         private GameObject m_TerrainContainer;
         private BoxCollider2D m_TerraiinContainerCollider;
@@ -32,6 +34,7 @@ namespace Panels
             m_Right = transform.right;
             m_Up = transform.up;
             m_TerrainContainer = new GameObject();
+            m_TerrainContainer.transform.parent = _terrainContainer.transform;
 
 
             for (var i = 0; i < width; i++)
@@ -89,7 +92,7 @@ namespace Panels
             m_TerraiinContainerCollider.offset = new Vector2((_terrainOffset/2) * (width - 1), (_terrainOffset/2) * (height - 1));
             m_TerraiinContainerCollider.isTrigger = true;
 
-            m_TerrainContainer.AddComponent<DragDropManager>();
+            m_TerrainContainer.AddComponent<DragablesBehavior>();
         }
     }
 }

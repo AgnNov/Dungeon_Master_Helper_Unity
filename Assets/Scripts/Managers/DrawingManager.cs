@@ -1,3 +1,4 @@
+using Panels;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -18,62 +19,69 @@ public class DrawingManager : MonoBehaviour
     private float lineWidth = 0.1f;
     [SerializeField]
     private Material lineMaterial;
+    [SerializeField]
+    private GameObject _drawingsContainer;
+    [SerializeField]
+    private GameObject _panelManager;
+
+    private PanelManager _panelBehavior;
+
 
     public bool isActive = false;
 
 
     void Start()
     {
+        _panelBehavior = _panelManager.GetComponent<PanelManager>();
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (isActive && !_panelBehavior.isPanelOpened)
         {
-            _drawing = new GameObject();
-            _drawingCanvas = _drawing.AddComponent<Canvas>();
-            _line = _drawing.AddComponent<LineRenderer>();
-            _previousPosition = _drawing.transform.position;
 
-            _drawingCanvas.renderMode = RenderMode.WorldSpace;
-
-            _line.startWidth = lineWidth;
-            _line.material = lineMaterial;
-            _line.positionCount = 1;
-
-        }
-
-
-        if (Input.GetMouseButton(0))
-        {
-            Vector3 currentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Debug.Log(currentPosition);
-            currentPosition.z = 1;
-
-            if (Vector3.Distance(currentPosition, _previousPosition) > minDistance)
+            if (Input.GetMouseButtonDown(0))
             {
+                _drawing = new GameObject();
+                _drawing.transform.parent = _drawingsContainer.transform;
+                _line = _drawing.AddComponent<LineRenderer>();
+                _previousPosition = _drawing.transform.position;
 
-                if (_previousPosition == transform.position)
+                _line.startWidth = lineWidth;
+                _line.material = lineMaterial;
+                _line.positionCount = 1;
+
+            }
+
+
+            if (Input.GetMouseButton(0))
+            {
+                Vector3 currentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                currentPosition.z = 1;
+
+                if (Vector3.Distance(currentPosition, _previousPosition) > minDistance)
                 {
-                    _line.SetPosition(0, currentPosition);
-                }
 
-                else
-                {
-                    _line.positionCount++;
-                    _line.SetPosition(_line.positionCount - 1, currentPosition);
-                }
+                    if (_previousPosition == transform.position)
+                    {
+                        _line.SetPosition(0, currentPosition);
+                    }
 
-                _previousPosition = currentPosition;
+                    else
+                    {
+                        _line.positionCount++;
+                        _line.SetPosition(_line.positionCount - 1, currentPosition);
+                    }
+
+                    _previousPosition = currentPosition;
+                }
             }
         }
-        
     }
 
-    public void ChangeVisibility()
+    public void ChangeActiveness()
     {
         isActive = !isActive;
-        this.gameObject.SetActive(isActive);
     }
 }
 

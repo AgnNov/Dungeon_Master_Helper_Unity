@@ -1,14 +1,14 @@
-using Panels;
 using System.Collections;
 using System.Collections.Generic;
+using Spawners;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-namespace Panel
+namespace Panels
 {
-    public class CreatureaPanelBehavior : MonoBehaviour
+    public class CreaturePanelBehavior : MonoBehaviour
     {
         [SerializeField]
         private Button _addCreatureButton;

@@ -1,17 +1,22 @@
+using Panels;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DragDropManager : MonoBehaviour
+public class DragablesBehavior : MonoBehaviour
 {
     Vector3 mousePosition;
+    private DrawingManager _drawingManager;
+    private PanelManager _panelManager;
     private ThrashManager _thrashManager;
     private bool _isDraggedAboveThrash;
     private SpriteRenderer _thrashSpriteRenderer;
 
     private void Start()
     {
+        _drawingManager = GameObject.Find("DrawingManager").GetComponent<DrawingManager>();
+        _panelManager = GameObject.Find("PanelManager").GetComponent<PanelManager>();
         _thrashManager = GameObject.Find("ThrashManager").GetComponent<ThrashManager>();
     }
 
@@ -27,19 +32,22 @@ public class DragDropManager : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        _thrashManager.GetComponent<ThrashManager>().ActivateThrash();
-        transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition - mousePosition);
+        if (!_panelManager.isPanelOpened && !_drawingManager.isActive)
+        {
+            _thrashManager.ActivateThrash();
+            transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition - mousePosition);
+        }
     }
 
     private void OnMouseUp()
     {
-        if (_isDraggedAboveThrash)
+        if (_isDraggedAboveThrash && !_panelManager.isPanelOpened && !_drawingManager.isActive)
         {
             Destroy(this.gameObject);
             _isDraggedAboveThrash = false;
         }
 
-        _thrashManager.GetComponent<ThrashManager>().DeactivateThrash();
+        _thrashManager.DeactivateThrash();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -60,5 +68,4 @@ public class DragDropManager : MonoBehaviour
             _isDraggedAboveThrash = false;
         }
     }
-
 }
