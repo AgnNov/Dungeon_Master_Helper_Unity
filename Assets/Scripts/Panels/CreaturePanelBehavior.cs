@@ -3,25 +3,26 @@ using System.Collections.Generic;
 using Managers;
 using Spawners;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 namespace Panels
 {
-    public class TerrainPanelBehavior : MonoBehaviour
+    public class CreaturePanelBehavior : MonoBehaviour
     {
         [SerializeField]
-        private Button _addTerrainButton;
+        private Button _addCreatureButton;
         [SerializeField]
         private Button _confirmButton;
         [SerializeField]
         private Button _cancelButton;
 
         [SerializeField]
-        private TMP_InputField _heightInputValue;
+        private TMP_Text _dropdownChosenOptionTxt;
+
         [SerializeField]
-        private TMP_InputField _widthInputValue;
+        private TMP_InputField _creatureNameInput;
 
         [SerializeField]
         private GameObject _panelManagerGO;
@@ -32,33 +33,38 @@ namespace Panels
 
         private PanelManager _panelManager;
         private InputsManager _inputsManager;
-        private TerrainSpawner _terrainSpawner;
+        private CreatureSpawner _creatureSpawner;
 
-        private void Start()
+        public string creatureName;
+
+        void Start()
         {
             _panelManager = _panelManagerGO.GetComponent<PanelManager>();
             _inputsManager = _inputsManagerGO.GetComponent<InputsManager>();
-            _terrainSpawner = _spawnManagerGO.GetComponent<TerrainSpawner>();
+            _creatureSpawner = _spawnManagerGO.GetComponent<CreatureSpawner>();
 
 
-            _confirmButton.onClick.AddListener(() => _terrainSpawner.InstantiateTerrain());
-            _confirmButton.onClick.AddListener(() => _inputsManager.ResetInputText(_heightInputValue));
-            _confirmButton.onClick.AddListener(() => _inputsManager.ResetInputText(_widthInputValue));
+            _confirmButton.onClick.AddListener(() => _inputsManager.ResetInputText(_creatureNameInput));
+            _confirmButton.onClick.AddListener(() => _creatureSpawner.SpawnCreature(GetChosenCreatureType()));
             _confirmButton.onClick.AddListener(() => _panelManager.ClosePanel(gameObject));
 
-            _cancelButton.onClick.AddListener(() => _inputsManager.ResetInputText(_heightInputValue));
-            _cancelButton.onClick.AddListener(() => _inputsManager.ResetInputText(_widthInputValue));
+            _cancelButton.onClick.AddListener(() => _inputsManager.ResetInputText(_creatureNameInput));
             _cancelButton.onClick.AddListener(() => _panelManager.ClosePanel(gameObject));
-
         }
 
-        private void Update()
+        void Update()
         {
-            bool interactibilityCondition = _heightInputValue.text != "" && _widthInputValue.text != "";
+            bool interactibilityCondition = _creatureNameInput.text != "";
             _panelManager.ManageButtonInteractibility(interactibilityCondition,
                                                       _confirmButton);
+            creatureName = _creatureNameInput.text;
 
         }
 
+
+        private string GetChosenCreatureType()
+        {
+            return _dropdownChosenOptionTxt.text;
+        }
     }
 }

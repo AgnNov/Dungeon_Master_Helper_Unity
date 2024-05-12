@@ -5,17 +5,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Panels
+namespace Spawners
 {
     public class TerrainSpawner : MonoBehaviour
     {
         [SerializeField]
         private GameObject _terrainPrefab;
+        [SerializeField]
+        private GameObject _terrainContainer;
 
-        private GameObject m_TerrainContainer;
-        private BoxCollider2D m_TerraiinContainerCollider;
-        private Vector3 m_Right;
-        private Vector3 m_Up;
+        private GameObject _terrainSpawned;
+        private BoxCollider2D _terraiinContainerCollider;
+        private Vector3 _right;
+        private Vector3 _up;
 
         private string _terrainWidth;
         private string _terrainHeight;
@@ -29,28 +31,29 @@ namespace Panels
             int.TryParse(GetWidthInputValue(), out width);
             int.TryParse(GetHeightInputValue(), out height);
 
-            m_Right = transform.right;
-            m_Up = transform.up;
-            m_TerrainContainer = new GameObject();
+            _right = transform.right;
+            _up = transform.up;
+            _terrainSpawned = new GameObject();
+            _terrainSpawned.transform.parent = _terrainContainer.transform;
 
 
             for (var i = 0; i < width; i++)
             {
                 float widthOffset = i * _terrainOffset;
-                Vector3 horizontalPosition = transform.position + m_Right * widthOffset;
+                Vector3 horizontalPosition = transform.position + _right * widthOffset;
                 GameObject horizontalTile = Instantiate(_terrainPrefab, horizontalPosition, transform.rotation);
-                horizontalTile.transform.parent = m_TerrainContainer.transform;
+                horizontalTile.transform.parent = _terrainSpawned.transform;
 
                 for (var j = 1; j < height; j++)
                 {
                     float heightOffset = j * _terrainOffset;
-                    Vector3 verticalPosition = transform.position + m_Right * widthOffset + m_Up * heightOffset;
+                    Vector3 verticalPosition = transform.position + _right * widthOffset + _up * heightOffset;
                     GameObject verticalTile = Instantiate(_terrainPrefab, verticalPosition, transform.rotation);
-                    verticalTile.transform.parent = m_TerrainContainer.transform;
+                    verticalTile.transform.parent = _terrainSpawned.transform;
                 }
             }
 
-            m_TerrainContainer.transform.position = transform.position + transform.right * (width * -0.37f) + transform.up * (height * -0.37f);
+            _terrainSpawned.transform.position = transform.position + transform.right * (width * -(_terrainOffset/2)) + transform.up * (height * -(_terrainOffset / 2));
 
             AddTerrainComponents(width, height);
         }
@@ -60,12 +63,6 @@ namespace Panels
         {
             _terrainHeight = GameObject.Find("HeightInput").GetComponent<TMP_InputField>().text;
 
-
-            if (_terrainHeight == null)
-            {
-                Debug.Log("Height input value not found!");
-            }
-
             return _terrainHeight;
         }
 
@@ -73,23 +70,18 @@ namespace Panels
         {
             _terrainWidth = GameObject.Find("WidthInput").GetComponent<TMP_InputField>().text;
 
-            if (_terrainWidth == null)
-            {
-                Debug.Log("Width input value not found!");
-            }
-
             return _terrainWidth;
         }
 
         private void AddTerrainComponents(int width, int height)
         {
-            m_TerrainContainer.AddComponent<BoxCollider2D>();
-            m_TerraiinContainerCollider = m_TerrainContainer.GetComponent<BoxCollider2D>();
-            m_TerraiinContainerCollider.size = new Vector2(width * _terrainOffset, height * _terrainOffset);
-            m_TerraiinContainerCollider.offset = new Vector2((_terrainOffset/2) * (width - 1), (_terrainOffset/2) * (height - 1));
-            m_TerraiinContainerCollider.isTrigger = true;
+            _terrainSpawned.AddComponent<BoxCollider2D>();
+            _terraiinContainerCollider = _terrainSpawned.GetComponent<BoxCollider2D>();
+            _terraiinContainerCollider.size = new Vector2(width * _terrainOffset, height * _terrainOffset);
+            _terraiinContainerCollider.offset = new Vector2((_terrainOffset/2) * (width - 1), (_terrainOffset/2) * (height - 1));
+            _terraiinContainerCollider.isTrigger = true;
 
-            m_TerrainContainer.AddComponent<DragDropManager>();
+            _terrainSpawned.AddComponent<DragablesBehavior>();
         }
     }
 }
